@@ -52,7 +52,7 @@ public class Querys implements Serializable  {
             consulta = em.createNamedQuery("Usuarios.findByUsuarioNombre", Usuarios.class).setParameter("usuarioNombre", usuario);
             xes = consulta.getResultList();
            if (xes.size() > 0) {
-               if (xes.get(0).getUsuarioContraseña().equals(contrasena)){
+               if (xes.get(0).getUsuarioPassword().equals(contrasena)){
                    setEncontrado(xes.get(0));
                    return true;            
                }
