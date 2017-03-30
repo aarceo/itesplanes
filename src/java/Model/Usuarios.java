@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Usuarios.findAll", query = "SELECT u FROM Usuarios u")
     , @NamedQuery(name = "Usuarios.findByIdUsuario", query = "SELECT u FROM Usuarios u WHERE u.idUsuario = :idUsuario")
     , @NamedQuery(name = "Usuarios.findByUsuarioNombre", query = "SELECT u FROM Usuarios u WHERE u.usuarioNombre = :usuarioNombre")
-    , @NamedQuery(name = "Usuarios.findByUsuarioContrase\u00f1a", query = "SELECT u FROM Usuarios u WHERE u.usuarioContrase\u00f1a = :usuarioContrase\u00f1a")})
+    , @NamedQuery(name = "Usuarios.findByUsuarioPassword", query = "SELECT u FROM Usuarios u WHERE u.usuarioPassword = :usuarioPassword")})
 public class Usuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,9 +43,9 @@ public class Usuarios implements Serializable {
     @Size(max = 50)
     @Column(name = "usuario_nombre")
     private String usuarioNombre;
-    @Size(max = 50)
-    @Column(name = "usuario_contrase\u00f1a")
-    private String usuarioContraseña;
+    @Size(max = 20)
+    @Column(name = "usuario_password")
+    private String usuarioPassword;
 
     public Usuarios() {
     }
@@ -70,12 +70,12 @@ public class Usuarios implements Serializable {
         this.usuarioNombre = usuarioNombre;
     }
 
-    public String getUsuarioContraseña() {
-        return usuarioContraseña;
+    public String getUsuarioPassword() {
+        return usuarioPassword;
     }
 
-    public void setUsuarioContraseña(String usuarioContraseña) {
-        this.usuarioContraseña = usuarioContraseña;
+    public void setUsuarioPassword(String usuarioPassword) {
+        this.usuarioPassword = usuarioPassword;
     }
 
     @Override
