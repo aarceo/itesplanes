@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Captura de planes</title>
+    </h:head>
+    <h:body style="background-image: url('imagenes/logoites.png')">
+        
+  <br />
+  <br />
+  
+  <div align="center">     
+      
+   <h:form id="forma">
+       <p:growl id="mensajesdos"  showDetail="true" />
+       <p:tabView style="width: 70%;">
+           <p:tab title="General">   
+           <p:watermark value="0" for="hteoria" />
+           <p:watermark value="0" for="hpractica" />
+           <p:watermark value="0" for="asigcreditos" />
+           <p:panelGrid id="panelasig" columns="2">
+           <f:facet name="header">
+            <h:outputText value="Captura de Planes de Estudios"/>
+           </f:facet> 
+
+           
+            <p:outputLabel for="carreras" value="Carreras" />
+            <p:selectOneMenu id="carreras" value="#{planesbean.idcarre}">
+                <p:ajax listener="#{planesbean.SeleccionaCarrera}" update="materia"  />
+                <f:selectItem  itemLabel="Seleccione una carrera" itemValue="" noSelectionOption="true" />
+                <f:selectItems  value="#{planesbean.mapcarreras}" />
+            </p:selectOneMenu>     
+            
+            <p:outputLabel for="materia" value="Materias" />
+            <p:selectOneMenu id="materia" value="#{planesbean.idmateria}" effect="fold" >
+                <p:ajax listener="#{planesbean.validaPlan()}" update="panelasig" />
+                <f:selectItem  itemLabel="Seleccione una materia" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{planesbean.mapmaterias}"/>
+            </p:selectOneMenu>  
+
+            <p:outputLabel value="Clave de la Materia" for="clvmateria" />
+            <p:inputText id="clvmateria" value="#{planesbean.asigclave}" />
+
+            <p:outputLabel value="Horas Teoria" for="hteoria" />
+            <p:inputText id="hteoria" value="#{planesbean.asighorasteoria}" >
+                <f:validateDoubleRange minimum="1" maximum="10" />
+            </p:inputText>    
+
+            <p:outputLabel value="Horas Practica" for="hpractica" />
+            <p:inputText id="hpractica" value="#{planesbean.asighoraspractica}"  >
+                <f:validateDoubleRange minimum="1" maximum="10" />
+            </p:inputText>    
+
+            <p:outputLabel value="Creditos" for="asigcreditos" />
+            <p:inputText id="asigcreditos" value="#{planesbean.asighorascreditos}" >
+                <f:validateDoubleRange minimum="1" maximum="10" />
+            </p:inputText>    
+
+            <p:outputLabel for="asigpres" value="Presentación" />
+            <p:inputTextarea  id="asigpres"  value="#{planesbean.asigpresentacion}" 
+                            maxlength="2147483647" rows="15" style="width:100%;" autoResize="false"  />
+            
+            <p:outputLabel value="Intención Didáctica" for="asigintd" />
+            <p:inputTextarea id="asigintd" value="#{planesbean.asigintenciondidactica}"
+                             maxlength="2147483647" rows="15" style="width:100%;" autoResize="false"  />
+
+            <p:outputLabel value="Competencia de la Materia" for="compemate" />
+            <p:inputText id="compemate" value="#{planesbean.asigcompematerias}" style="width:100%;"/>
+            
+            <p:outputLabel value="Número de Temas" for="ntemas" />
+            <p:inputText id="ntemas" value="#{planesbean.asignumtemas}" >
+                <f:validateDoubleRange minimum="1" maximum="10" />
+            </p:inputText>    
+                
+            <p:outputLabel value="Fuentes de Información" for="fuentesinfo" />
+            <p:inputTextarea id="fuentesinfo" value="#{planesbean.asigfuentesinfo}" 
+                             maxlength="2147483647" rows="15" style="width:100%;" autoResize="false"  />
+
+           <f:facet name="footer">
+             <h:panelGroup style="display:block; text-align:center">
+                 <h:commandButton id="submit" value="Guardar" actionListener="#{planesbean.guardarPlan()}"  />
+             </h:panelGroup>
+          </f:facet>
+      </p:panelGrid>
+     </p:tab>
+     <p:tab title="Temas">
+         <p:panelGrid id="paneltemas" columns="2" style="width:80%;">
+             <f:facet name="header">
+                 <h:outputText value="Captura de Temas y Subtemas"/>
+             </f:facet>
+             <p:outputLabel value="Numero de Tema " for="numtheme" />
+             <p:inputText id="numtheme" value="#{planesbean.tema_numero}"  >
+             </p:inputText>    
+
+             <p:outputLabel value="Nombre del Tema " for="nomtheme" />
+             <p:inputText id="nomtheme" value="#{planesbean.tema_nombre}"  />
+
+             <p:outputLabel for="subtheme" value="Subtemas " />
+             <p:inputTextarea  id="subtheme"  value="#{planesbean.tema_subtemas}" 
+                            maxlength="2147483647" rows="15" style="width:100%;" autoResize="false"  />
+                <f:facet name="footer">
+                    <h:panelGroup style="display:block; text-align:center">
+                        <h:commandButton id="enviar" value="Agregar"  actionListener="#{planesbean.agregaRegistros()}"/>
+                    </h:panelGroup>
+                </f:facet>
+
+              </p:panelGrid> 
+              <p:dataTable id="temasgrid" value="#{planesbean.gridtemas}"  
+                           rows="#{planesbean.asignumtemas}" rendered="true" var="regtema"  style="width:80%;"
+                           selectionMode="single" rowKey="#{regtema.temaNumero}" selection="#{planesbean.selasigtemas}"
+                           rowIndexVar="rowIndex">
+                  <p:ajax event="rowSelect" listener="#{planesbean.onRowSelect(event)}" />
+                  <p:column headerText="Numero de Tema" >
+                      #{regtema.temaNumero}
+                  </p:column>
+                  <p:column headerText="Nombre del Tema">
+                      #{regtema.temaNombre}
+                  </p:column>
+                  <p:column headerText="Subtemas">
+                      #{regtema.temaSubtemas}
+                  </p:column> 
+              </p:dataTable>
+              
+     </p:tab>
+     <p:tab title="Competencias">
+
+          <p:panelGrid id="paneltemasComp" columns="2" style="width:90%;">
+             <f:facet name="header">
+                 <h:outputText value="Captura de Competencias"/>
+             </f:facet>
+             <p:outputLabel value="Numero de Competencia " for="numcompe" />
+             <p:inputText id="numcompe" value="#{planesbean.compnumero}"  >
+             </p:inputText>    
+
+             <p:outputLabel value="Competencia Especifica " for="nomcompe" />
+             <p:inputText id="nomcompe" value="#{planesbean.compespecifica}" />
+
+             <p:outputLabel for="compgene" value="Competencias Genericas " />
+             <p:inputTextarea  id="compgene"  value="#{planesbean.compgenerica}" 
+                            maxlength="2147483647" rows="15" style="width:100%;" autoResize="false"  />
+             <p:outputLabel for="compact" value="Actividades de Aprendizaje " />
+             <p:inputTextarea  id="compact"  value="#{planesbean.compactaprendizaje}" 
+                            maxlength="2147483647" rows="15" style="width:100%;" autoResize="false"  />
+                <f:facet name="footer">
+                    <h:panelGroup style="display:block; text-align:center">
+                        <h:commandButton id="enviarcompe" value="Agregar"  actionListener="#{planesbean.agregaCompe()}"/>
+                    </h:panelGroup>
+                </f:facet>
+          </p:panelGrid>    
+              <p:dataTable id="compegrid" value="#{planesbean.gridcomp}"  
+                           rows="#{planesbean.asignumtemas}" rendered="true" var="regcomp" style="width:70%;">
+                  <p:column headerText="Numero de Competencia" >
+                      #{regcomp.compNumero}
+                  </p:column>
+                  <p:column headerText="Competencia Especifica">
+                      #{regcomp.compEspecifica}
+                  </p:column>
+                  <p:column headerText="Competencias Genericas">
+                      #{regcomp.compGenericas}
+                  </p:column>
+                  <p:column headerText="Actividades de Aprendizaje">
+                      #{regcomp.compActAprendizaje}
+                  </p:column>
+
+              </p:dataTable>   
+              
+     </p:tab>      
+   </p:tabView>        
+</h:form>        
+  </div>      
+</h:body>
+</html>
+
