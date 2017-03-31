@@ -8,20 +8,26 @@
         <title>Captura de planes</title>
     </h:head>
     <h:body style="background-image: url('imagenes/logoites.png')">
-        
   <br />
   <br />
   
   <div align="center">     
       
    <h:form id="forma">
+       <p:toolbar style="width: 90%;">
+           <f:facet name="right">
+               <p:outputLabel value="#{usuario.usuarioActual.usuarioNombre}" />
+               <p:spacer width="1" height="22" style="position: relative; bottom: -5px;background-color: #A8A8A8; margin-left: 10px;margin-right: 10px" />
+               <p:commandButton type="button" value="Salir" />
+           </f:facet>
+       </p:toolbar>
        <p:growl id="mensajesdos"  showDetail="true" />
-       <p:tabView style="width: 70%;">
+       <p:tabView style="width: 90%;">
            <p:tab title="General">   
            <p:watermark value="0" for="hteoria" />
            <p:watermark value="0" for="hpractica" />
            <p:watermark value="0" for="asigcreditos" />
-           <p:panelGrid id="panelasig" columns="2">
+           <p:panelGrid id="panelasig" columns="2" style="width: 100%">
            <f:facet name="header">
             <h:outputText value="Captura de Planes de Estudios"/>
            </f:facet> 
@@ -81,7 +87,7 @@
 
            <f:facet name="footer">
              <h:panelGroup style="display:block; text-align:center">
-                 <h:commandButton id="submit" value="Guardar" actionListener="#{planesbean.guardarPlan()}"  />
+                 <h:commandButton id="submit" type="button" value="Guardar" actionListener="#{planesbean.guardarPlan()}"  />
              </h:panelGroup>
           </f:facet>
       </p:panelGrid>
