@@ -23,9 +23,11 @@ import javax.persistence.TypedQuery;
 @SessionScoped
 public class Querys implements Serializable  {
     
-    EntityManager em;
+    EntityManager emcon;
+    EntityManager emplan;
     Usuarios encontrado;
-    EntityManagerFactory emf;
+    EntityManagerFactory emfcon;
+    EntityManagerFactory emfplan;
 
     public Usuarios getEncontrado() {
         return encontrado;
@@ -38,8 +40,10 @@ public class Querys implements Serializable  {
 
     public Querys() {
         
-        emf = Persistence.createEntityManagerFactory("itesplanesInstrPU");
-        em = emf.createEntityManager();
+        emfcon = Persistence.createEntityManagerFactory("itesplanesConPU");
+        emcon = emfcon.createEntityManager();
+        emfplan = Persistence.createEntityManagerFactory("itesplanesInstrPU");
+        emplan = emfplan.createEntityManager();
         encontrado = null;
        
     }
@@ -52,14 +56,12 @@ public class Querys implements Serializable  {
         
         
 
-            consulta = em.createNamedQuery("Usuarios.findByUsuarioNombre", Usuarios.class).setParameter("usuarioNombre", usuario);
+           consulta = emplan.createNamedQuery("Usuarios.findByUsuarioNombre", Usuarios.class).setParameter("usuarioNombre", usuario);
             xes = consulta.getResultList();
            if (xes.size() > 0) {
                aux = (Usuarios) xes.get(0);
                if (aux.getUsuarioPassword().equals(contrasena)){
                    setEncontrado(xes.get(0));
-//                   em.close();
-//                   emf.close();
                    return true;            
                }
            }
@@ -69,5 +71,8 @@ public class Querys implements Serializable  {
       return false;      
     }     
     
+    public String salir () {
+        return "index.xhtml";
+    }
     
 }
