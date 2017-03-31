@@ -7,6 +7,7 @@ package Controller;
 
 import Model.Usuarios;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -43,8 +44,10 @@ public class Querys implements Serializable  {
        
     }
     
+    
     public boolean ValidaUsuario (String usuario, String contrasena){
-        List<Usuarios> xes = null;
+        List<Usuarios> xes = new ArrayList<Usuarios>();
+        Usuarios aux;
         TypedQuery consulta;
         
         
@@ -52,8 +55,11 @@ public class Querys implements Serializable  {
             consulta = em.createNamedQuery("Usuarios.findByUsuarioNombre", Usuarios.class).setParameter("usuarioNombre", usuario);
             xes = consulta.getResultList();
            if (xes.size() > 0) {
-               if (xes.get(0).getUsuarioPassword().equals(contrasena)){
+               aux = (Usuarios) xes.get(0);
+               if (aux.getUsuarioPassword().equals(contrasena)){
                    setEncontrado(xes.get(0));
+//                   em.close();
+//                   emf.close();
                    return true;            
                }
            }
