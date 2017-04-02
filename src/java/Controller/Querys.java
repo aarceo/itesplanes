@@ -40,10 +40,10 @@ public class Querys implements Serializable  {
 
     public Querys() {
         
-        emfcon = Persistence.createEntityManagerFactory("itesplanesConPU");
-        emcon = emfcon.createEntityManager();
         emfplan = Persistence.createEntityManagerFactory("itesplanesInstrPU");
         emplan = emfplan.createEntityManager();
+        emfcon = Persistence.createEntityManagerFactory("itesplanesConPU");
+        emcon = emfcon.createEntityManager();
         encontrado = null;
        
     }
@@ -72,7 +72,7 @@ public class Querys implements Serializable  {
     }     
     
     public String salir () {
-        return "index.xhtml";
+        return "index.xhtml?faces-redirect=true";
     }
     
 }
