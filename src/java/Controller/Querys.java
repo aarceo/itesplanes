@@ -51,7 +51,7 @@ public class Querys implements Serializable  {
     
     public boolean ValidaUsuario (String usuario, String contrasena){
         List<Usuarios> xes = new ArrayList<Usuarios>();
-        Usuarios aux;
+        Usuarios aux = new Usuarios();
         TypedQuery consulta;
         
         

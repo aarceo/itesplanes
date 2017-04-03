@@ -30,6 +30,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.constraints.Size;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 
@@ -538,13 +539,13 @@ public Map<String,String> getAllMaterias(String Carrera){
         } catch (Exception e) {
           e.printStackTrace();
         }
-        
+        System.out.println (asig.getIdAsignatura());
         if(!emplan.getTransaction().isActive())
               emplan.getTransaction().begin();
 
         for (AsigTemas ntema: gridtemas){
               ntema.setIdTemas(Integer.parseInt("0"));
-              ntema.setIdAsignatura(Integer.parseInt(idmateria));
+              ntema.setIdAsignatura(asig.getIdAsignatura());
              emplan.persist(ntema);
         }
         emplan.getTransaction().commit();
@@ -554,11 +555,12 @@ public Map<String,String> getAllMaterias(String Carrera){
         
         for (AsigTemasComp comp: gridcomp) {
             comp.setIdTemasComp(Integer.parseInt("0"));            
-            comp.setIdAsignatura(Integer.parseInt(idmateria));
+            comp.setIdAsignatura(asig.getIdAsignatura());
             emplan.persist(comp);
         }
         emplan.getTransaction().commit();
-        
+
+       System.out.println("Salio por aqui");         
        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Plan de Estudios "+ asignom +" guardado")); 
     }
 
@@ -614,7 +616,7 @@ public Map<String,String> getAllMaterias(String Carrera){
         }
         emplan.getTransaction().commit();
 
-       FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Plan de Estudios "+ idmateria +" modificado")); 
+     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Plan de Estudios "+ idmateria +" modificado")); 
     }
     
 public void onRowSelect(SelectEvent event) {
@@ -627,5 +629,9 @@ public void onRowSelect(SelectEvent event) {
       tema_nombre = asigtemasmod.getTemaNombre();
       tema_subtemas = asigtemasmod.getTemaSubtemas();
   }
-    
+
+
+   public void reset() {
+        RequestContext.getCurrentInstance().reset("forma");
+   }  
 }
