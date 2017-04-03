@@ -452,7 +452,6 @@ public Map<String,String> getAllMaterias(String Carrera){
            for (CeReticula selma: listmaterias) {
                if (selma.getRetID().equals(Short.parseShort(idmateria))){
                    asignom = selma.getRetNomCompleto();
-                   System.out.println (asignom);
                }
            }
        }
@@ -461,6 +460,7 @@ public Map<String,String> getAllMaterias(String Carrera){
     public void LeerAsignatura (Asignaturas asig) {
 
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "El Plan de Estudios ya existe. Realice las modificaciones y guarde."));
+    
         asignom = asig.getAsigNombre();
         asigclave = asig.getAsigClave();
         asighorasteoria = String.valueOf(asig.getAsigHorasTeoria());
@@ -472,25 +472,30 @@ public Map<String,String> getAllMaterias(String Carrera){
         asigfuentesinfo = asig.getAsigFuentesInformacion();
         asigcompematerias = asig.getAsigCompeMateria();
         
+        asignaturasmod = asig;
+        
         TypedQuery q = emplan.createNamedQuery("AsigTemas.findByIdAsignatura", AsigTemas.class)
                              .setParameter("idAsignatura",Short.parseShort(idmateria));
         
         gridtemasmod = q.getResultList();
-        if (!gridtemasmod.isEmpty()) {
-            gridtemas = new ArrayList<AsigTemas>();
-            for (int i = 0; i < gridtemasmod.size(); i++) {
-                gridtemas.add(gridtemasmod.get(i));
-            }
-        }
+        gridtemas = gridtemasmod;
+        
+//        if (!gridtemasmod.isEmpty()) {
+//            gridtemas = new ArrayList<AsigTemas>();
+//            for (int i = 0; i < gridtemasmod.size(); i++) {
+//                gridtemas.add(gridtemasmod.get(i));
+//            }
+//        }
         q = emplan.createNamedQuery("AsigTemasComp.findByIdAsignatura", AsigTemasComp.class)
                    .setParameter("idAsignatura", Short.parseShort(idmateria));
         gridcompmod = q.getResultList();
-        if (!gridcompmod.isEmpty()){
-            gridcomp = new ArrayList<AsigTemasComp>();
-            for (int i = 0; i < gridcomp.size(); i++) {
-                gridcomp.add(gridcompmod.get(i));
-            }
-        }
+        gridcomp = gridcompmod;
+//        if (!gridcompmod.isEmpty()){
+//            gridcomp = new ArrayList<AsigTemasComp>();
+//            for (int i = 0; i < gridcomp.size(); i++) {
+//                gridcomp.add(gridcompmod.get(i));
+//            }
+//        }
                    
     }
     
@@ -500,7 +505,8 @@ public Map<String,String> getAllMaterias(String Carrera){
         if (modifica) {
             guardarPlanMod();
         }
-        asig.setIdAsignatura(Short.parseShort("0"));
+        System.out.println ("Pasa por aqui");
+        asig.setIdAsignatura(Integer.parseInt("0"));
         asig.setRetId(Short.parseShort(idmateria));
         asig.setAsigNombre(asignom);
         asig.setAsigClave(asigclave);
@@ -533,26 +539,26 @@ public Map<String,String> getAllMaterias(String Carrera){
           e.printStackTrace();
         }
         
-        for (int i = 0; i < gridtemas.size(); i++){
-            AsigTemas ntema = new AsigTemas();
-            ntema.setIdTemas(Short.parseShort("0"));
-            ntema.setIdAsignatura(Short.parseShort(idmateria));
-            ntema.setTemaNumero(gridtemas.get(i).getTemaNumero());
-            ntema.setTemaNombre(gridtemas.get(i).getTemaNombre());
-            ntema.setTemaSubtemas(gridtemas.get(i).getTemaSubtemas());
-            emplan.persist(ntema);
+        if(!emplan.getTransaction().isActive())
+              emplan.getTransaction().begin();
+
+        for (AsigTemas ntema: gridtemas){
+              ntema.setIdTemas(Integer.parseInt("0"));
+              ntema.setIdAsignatura(Integer.parseInt(idmateria));
+             emplan.persist(ntema);
         }
-        for (int i = 0; i < gridcomp.size(); i++){
-            AsigTemasComp comp = new AsigTemasComp();
-            comp.setIdTemasComp(Short.parseShort("0"));
-            comp.setIdAsignatura(Short.parseShort(idmateria));
-            comp.setCompNumero(gridcomp.get(i).getCompNumero());
-            comp.setCompEspecifica(gridcomp.get(i).getCompEspecifica());
-            comp.setCompGenericas(gridcomp.get(i).getCompGenericas());
-            comp.setCompActAprendizaje(gridcomp.get(i).getCompActAprendizaje());
+        emplan.getTransaction().commit();
+        
+        if(!emplan.getTransaction().isActive())
+              emplan.getTransaction().begin();
+        
+        for (AsigTemasComp comp: gridcomp) {
+            comp.setIdTemasComp(Integer.parseInt("0"));            
+            comp.setIdAsignatura(Integer.parseInt(idmateria));
             emplan.persist(comp);
-            
         }
+        emplan.getTransaction().commit();
+        
        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Plan de Estudios "+ asignom +" guardado")); 
     }
 
@@ -560,7 +566,7 @@ public Map<String,String> getAllMaterias(String Carrera){
     public void guardarPlanMod(){
      
            
-        asignaturasmod.setRetId(Short.parseShort(idmateria));
+     //   asignaturasmod.setRetId(Short.parseShort(idmateria));
         asignaturasmod.setAsigNombre(asignom);
         asignaturasmod.setAsigClave(asigclave);
         asignaturasmod.setAsigHorasTeoria(Integer.parseInt(asighorasteoria));
@@ -591,42 +597,24 @@ public Map<String,String> getAllMaterias(String Carrera){
         } catch (Exception e) {
           e.printStackTrace();
         }
-//        try {
-//            
-//        if(!emplan.getTransaction().isActive())
-//              emplan.getTransaction().begin();
-//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-//        Validator validator = factory.getValidator();
-//
-//        Set<ConstraintViolation<AsigTemas>> constraintViolations = validator.validate(asignaturasmod);
-//
-//            if (constraintViolations.size() > 0 ) {
-//               System.out.println("Constraint Violations occurred..");
-//               for (ConstraintViolation<Asignaturas> contraints : constraintViolations) {
-//                    System.out.println(contraints.getRootBeanClass().getSimpleName()+
-//                                       "." + contraints.getPropertyPath() + " " + contraints.getMessage());
-//               }
-//            }
-//        
-//        for (int i = 0; i < gridtemas.size(); i++){
-//            AsigTemas ntema = new AsigTemas();
-//            ntema.setIdAsignatura(Short.parseShort(idmateria));
-//            ntema.setTemaNumero(gridtemas.get(i).getTemaNumero());
-//            ntema.setTemaNombre(gridtemas.get(i).getTemaNombre());
-//            ntema.setTemaSubtemas(gridtemas.get(i).getTemaSubtemas());
-         //   emplan.persist(ntema);
-  //      }
-//        for (int i = 0; i < gridcomp.size(); i++){
-//            AsigTemasComp comp = new AsigTemasComp();
-//            comp.setIdAsignatura(Short.parseShort(idmateria));
-//            comp.setCompNumero(gridcomp.get(i).getCompNumero());
-//            comp.setCompEspecifica(gridcomp.get(i).getCompEspecifica());
-//            comp.setCompGenericas(gridcomp.get(i).getCompGenericas());
-//            comp.setCompActAprendizaje(gridcomp.get(i).getCompActAprendizaje());
-//          //  emplan.persist(comp);
-//            
-//        }
-       FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Plan de Estudios "+ idmateria +" guardado")); 
+
+        if(!emplan.getTransaction().isActive())
+              emplan.getTransaction().begin();
+
+        for (AsigTemas ntema: gridtemas){
+             emplan.merge(ntema);
+        }
+        emplan.getTransaction().commit();
+        
+        if(!emplan.getTransaction().isActive())
+              emplan.getTransaction().begin();
+        
+        for (AsigTemasComp comp: gridcomp) {
+            emplan.merge(comp);
+        }
+        emplan.getTransaction().commit();
+
+       FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Plan de Estudios "+ idmateria +" modificado")); 
     }
     
 public void onRowSelect(SelectEvent event) {

@@ -40,11 +40,11 @@ public class AsigTemasComp implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
     @Column(name = "id_temas_comp")
-    private Short idTemasComp;
+    private Integer idTemasComp;
     @Column(name = "id_asignatura")
-    private Short idAsignatura;
+    private Integer idAsignatura;
     @Column(name = "comp_numero")
     private Integer compNumero;
     @Size(max = 50)
@@ -60,23 +60,23 @@ public class AsigTemasComp implements Serializable {
     public AsigTemasComp() {
     }
 
-    public AsigTemasComp(Short idTemasComp) {
+    public AsigTemasComp(Integer idTemasComp) {
         this.idTemasComp = idTemasComp;
     }
 
-    public Short getIdTemasComp() {
+    public Integer getIdTemasComp() {
         return idTemasComp;
     }
 
-    public void setIdTemasComp(Short idTemasComp) {
+    public void setIdTemasComp(Integer idTemasComp) {
         this.idTemasComp = idTemasComp;
     }
 
-    public Short getIdAsignatura() {
+    public Integer getIdAsignatura() {
         return idAsignatura;
     }
 
-    public void setIdAsignatura(Short idAsignatura) {
+    public void setIdAsignatura(Integer idAsignatura) {
         this.idAsignatura = idAsignatura;
     }
 

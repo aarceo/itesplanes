@@ -87,7 +87,7 @@
 
            <f:facet name="footer">
              <h:panelGroup style="display:block; text-align:center">
-                 <h:commandButton id="submit" type="button" value="Guardar" actionListener="#{planesbean.guardarPlan()}"  />
+                 <h:commandButton id="submit" value="Guardar" actionListener="#{planesbean.guardarPlan()}"  />
              </h:panelGroup>
           </f:facet>
       </p:panelGrid>
@@ -109,16 +109,13 @@
                             maxlength="2147483647" rows="15" style="width:100%;" autoResize="false"  />
                 <f:facet name="footer">
                     <h:panelGroup style="display:block; text-align:center">
-                        <h:commandButton id="enviar" value="Agregar"  actionListener="#{planesbean.agregaRegistros()}"/>
+                        <h:commandButton id="enviar"  value="Agregar"  actionListener="#{planesbean.agregaRegistros()}"/>
                     </h:panelGroup>
                 </f:facet>
 
               </p:panelGrid> 
               <p:dataTable id="temasgrid" value="#{planesbean.gridtemas}"  
-                           rows="#{planesbean.asignumtemas}" rendered="true" var="regtema"  style="width:80%;"
-                           selectionMode="single" rowKey="#{regtema.temaNumero}" selection="#{planesbean.selasigtemas}"
-                           rowIndexVar="rowIndex">
-                  <p:ajax event="rowSelect" listener="#{planesbean.onRowSelect(event)}" />
+                            var="regtema"  style="width:80%;">
                   <p:column headerText="Numero de Tema" >
                       #{regtema.temaNumero}
                   </p:column>
@@ -137,7 +134,7 @@
              <f:facet name="header">
                  <h:outputText value="Captura de Competencias"/>
              </f:facet>
-             <p:outputLabel value="Numero de Competencia " for="numcompe" />
+              <p:outputLabel value="Numero de Competencia " for="numcompe"  style="width:50%;"/>
              <p:inputText id="numcompe" value="#{planesbean.compnumero}"  >
              </p:inputText>    
 
@@ -157,7 +154,7 @@
                 </f:facet>
           </p:panelGrid>    
               <p:dataTable id="compegrid" value="#{planesbean.gridcomp}"  
-                           rows="#{planesbean.asignumtemas}" rendered="true" var="regcomp" style="width:70%;">
+                           rendered="true" var="regcomp" style="width:90%;">
                   <p:column headerText="Numero de Competencia" >
                       #{regcomp.compNumero}
                   </p:column>

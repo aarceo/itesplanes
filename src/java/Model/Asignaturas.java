@@ -46,9 +46,9 @@ public class Asignaturas implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
     @Column(name = "id_asignatura")
-    private Short idAsignatura;
+    private Integer idAsignatura;
     @Column(name = "ret_id")
     private Short retId;
     @Size(max = 50)
@@ -81,15 +81,15 @@ public class Asignaturas implements Serializable {
     public Asignaturas() {
     }
 
-    public Asignaturas(Short idAsignatura) {
+    public Asignaturas(Integer idAsignatura) {
         this.idAsignatura = idAsignatura;
     }
 
-    public Short getIdAsignatura() {
+    public Integer getIdAsignatura() {
         return idAsignatura;
     }
 
-    public void setIdAsignatura(Short idAsignatura) {
+    public void setIdAsignatura(Integer idAsignatura) {
         this.idAsignatura = idAsignatura;
     }
 

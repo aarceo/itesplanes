@@ -39,11 +39,11 @@ public class AsigTemas implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
     @Column(name = "id_temas")
-    private Short idTemas;
+    private Integer idTemas;
     @Column(name = "id_asignatura")
-    private Short idAsignatura;
+    private Integer idAsignatura;
     @Column(name = "tema_numero")
     private Integer temaNumero;
     @Size(max = 50)
@@ -56,23 +56,23 @@ public class AsigTemas implements Serializable {
     public AsigTemas() {
     }
 
-    public AsigTemas(Short idTemas) {
+    public AsigTemas(Integer idTemas) {
         this.idTemas = idTemas;
     }
 
-    public Short getIdTemas() {
+    public Integer getIdTemas() {
         return idTemas;
     }
 
-    public void setIdTemas(Short idTemas) {
+    public void setIdTemas(Integer idTemas) {
         this.idTemas = idTemas;
     }
 
-    public Short getIdAsignatura() {
+    public Integer getIdAsignatura() {
         return idAsignatura;
     }
 
-    public void setIdAsignatura(Short idAsignatura) {
+    public void setIdAsignatura(Integer idAsignatura) {
         this.idAsignatura = idAsignatura;
     }
 
